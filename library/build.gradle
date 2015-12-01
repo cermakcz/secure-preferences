@@ -23,20 +23,30 @@ android {
         testInstrumentationRunner "android.test.InstrumentationTestRunner"
     }
 
-    dependencies {
-        compile 'com.scottyab:aes-crypto:0.0.4'
-
-        //used when referencing a local copy of aes-crypto
-        //compile project(':aes-crypto-release')
-    }
-
-
-
     testOptions.unitTests.all {
         testLogging {
             events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
         }
     }
+}
 
-    apply from: 'https://raw.github.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle'
+dependencies {
+    compile 'com.scottyab:aes-crypto:0.0.4'
+
+    //used when referencing a local copy of aes-crypto
+    //compile project(':aes-crypto-release')
+}
+
+apply from: 'https://raw.github.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle'
+
+apply plugin: 'android-maven'
+
+afterEvaluate { project ->
+    install {
+        repositories {
+            mavenInstaller {
+                pom = project.uploadArchives.repositories.mavenDeployer.pom
+            }
+        }
+    }
 }
